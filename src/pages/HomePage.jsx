@@ -3,6 +3,7 @@ import Banner from "../assets/images/banner.png";
 import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";
 import { useProduct } from "../context/ProductsContext";
+import { Helmet } from "react-helmet";
 
 const HomePage = () => {
   const { getUserData } = useAuth();
@@ -27,6 +28,10 @@ const HomePage = () => {
 
   return (
     <div className="">
+      <Helmet>
+        <title>TikTok Services</title>
+      </Helmet>
+
       <div>
         <img src={Banner} className="w-full h-[350px] object-cover" alt="" />
       </div>

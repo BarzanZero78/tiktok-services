@@ -1,8 +1,13 @@
 import React from "react";
+import { Helmet } from "react-helmet";
 
 const TutorialPage = () => {
   return (
     <div className="pt-[80px] flex flex-col justify-center items-center gap-5 text-white">
+      <Helmet>
+        <title>TikTok Services | مەرجەکان</title>
+      </Helmet>
+
       <div>
         <h3 className="text-2xl">مەرجەکان</h3>
       </div>

@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import { Navigate } from "react-router-dom";
 import { useProduct } from "../context/ProductsContext";
 import { useTranslation } from "react-i18next";
+import { Helmet } from "react-helmet";
 
 const MyOrdersPage = () => {
   const { user, getUserData } = useAuth();
@@ -31,6 +32,10 @@ const MyOrdersPage = () => {
 
   return (
     <div className="text-white">
+      <Helmet>
+        <title>TikTok Services | داواکاریەکانم</title>
+      </Helmet>
+
       {userData ? (
         <div className="pt-[80px] flex flex-col justify-center items-center gap-10">
           <div>

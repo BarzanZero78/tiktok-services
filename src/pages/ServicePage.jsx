@@ -3,6 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import { Link, useParams } from "react-router-dom";
 import { useProduct } from "../context/ProductsContext";
 import OrderForm from "../components/OrderForm";
+import { Helmet } from "react-helmet";
 
 const ServicePage = () => {
   const { productSlug } = useParams();
@@ -44,6 +45,10 @@ const ServicePage = () => {
 
   return (
     <div className="">
+      <Helmet>
+        <title>TikTok Services | خزمەتگوزاری {productDetails ? productDetails.productName : ''}</title>
+      </Helmet>
+
       {userData ? (
         <div className="text-white flex flex-col justify-center items-center gap-10">
           <header className="fixed top-0 left-0 w-full h-12 bg-[#212121] flex justify-between items-center px-2">

@@ -1,10 +1,16 @@
 import React from "react";
 import FastPayIcon from "../assets/icons/fastpay.png";
 import KorekIcon from "../assets/icons/korek.png";
+import { Helmet } from "react-helmet";
 
 const PaymentPage = () => {
   return (
     <div className="text-white flex flex-col justify-center items-center pt-[80px] p-5">
+
+      <Helmet>
+        <title>TikTok Services | پارەدان</title>
+      </Helmet>
+
       <div className="flex flex-col justify-center items-center py-2">
         <h3 className="text-2xl">پارەدان</h3>
       </div>
