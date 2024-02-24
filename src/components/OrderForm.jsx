@@ -31,7 +31,7 @@ const OrderForm = ({
         const orderDay = new Date().getDate();
         const orderMonth = new Date().getMonth();
         const orderYear = new Date().getFullYear();
-        const orderDate = {
+        const orderData = {
           user,
           selectedService,
           orderLink,
@@ -44,7 +44,7 @@ const OrderForm = ({
 
         await orderService(
           selectedService.id,
-          orderDate,
+          orderData,
           user,
           productDetails,
           selectedService,

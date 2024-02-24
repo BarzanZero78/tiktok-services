@@ -9,17 +9,16 @@ import UserAllOrders from "../components/UserAllOrders";
 import UserActiveOrders from "../components/UserActiveOrders";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "../context/ThemeContext";
+import { Helmet } from "react-helmet";
 
 const ProfilePage = () => {
   const { user, signOutUser } = useAuth();
-  const { fetchUserOrders } = useProduct();
   const navigate = useNavigate();
   const [showSignOutDialog, setShowSignOuDialog] = useState(false);
   const [showChangeAccent, setShowChangeAccent] = useState(false);
   const [showUserMoneySpent, setShowUserMoneySpent] = useState(false);
   const [showUserAllOrders, setShowUserAllOrders] = useState(false);
   const [showUserActiveOrders, setShowUserActiveOrders] = useState(false);
-  const [userOrders, setUserOrders] = useState([]);
   const { t } = useTranslation();
   const { currentAccent, changeAccent } = useTheme();
 
@@ -32,21 +31,15 @@ const ProfilePage = () => {
     }
   };
 
-  useEffect(() => {
-    getUserOrders();
-  }, [fetchUserOrders]);
-
-  const getUserOrders = async () => {
-    if (user) {
-      const data = await fetchUserOrders(user.userId);
-      setUserOrders(data);
-    }
-  };
-
   return (
     <div className="">
       {user ? (
         <div className="pt-[80px]">
+
+          <Helmet>
+            <title>TikTok Services | {user.userName}</title>
+          </Helmet>
+
           <div className="w-[95%] h-[200px] bg-[#212121] text-white rounded-xl mx-auto flex flex-row-reverse justify-between items-center p-2">
             <div className="flex flex-col justify-between items-center h-full py-2">
               <div className="flex flex-row-reverse justify-center items-center gap-1">
@@ -195,10 +188,6 @@ const ProfilePage = () => {
                 t={t}
               />
             )}
-
-            {userOrders.map((userOrder) => (
-              <div key={userOrder.id}></div>
-            ))}
           </div>
         </div>
       ) : (

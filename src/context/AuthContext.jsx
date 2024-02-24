@@ -32,7 +32,7 @@ const UserAuthProvider = ({ children }) => {
     getUserOnLoad();
   }, []);
 
-  const getUserOnLoad = () => {
+  const getUserOnLoad = async () => {
     auth.onAuthStateChanged(async (currentUser) => {
       if (currentUser) {
         const userDoc = doc(
@@ -47,7 +47,7 @@ const UserAuthProvider = ({ children }) => {
           setUser(userData);
         }
       } else {
-        setUser(null); // No authenticated user, set user state to null
+        setUser(null);
       }
 
       setIsLoading(false);

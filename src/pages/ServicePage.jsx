@@ -44,9 +44,9 @@ const ServicePage = () => {
         <div className="text-white flex flex-col justify-center items-center gap-10">
           <header className="fixed top-0 left-0 w-full h-12 bg-[#212121] flex justify-between items-center px-2">
             <div>
-              <Link to="/" className="active:scale-95 hover:text-gray-300">
+              <a href="/" className="active:scale-95 hover:text-gray-300">
                 <span className="material-icons">arrow_back</span>
-              </Link>
+              </a>
             </div>
 
             {productDetails ? (

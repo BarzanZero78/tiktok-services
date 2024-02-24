@@ -7,12 +7,10 @@ import { Helmet } from "react-helmet";
 
 const HomePage = () => {
   const { user } = useAuth();
-  const [userData, setUserData] = useState(null);
   const [showSignInDialog, setShowSignInDialog] = useState(false);
   const { products } = useProduct();
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  
   const hanldeProductClick = (product) => {
     setSelectedProduct(product);
     setShowSignInDialog(true);
@@ -51,7 +49,6 @@ const HomePage = () => {
                     />
                     <p>{product.productName}</p>
                   </Link>
-
                 </div>
               ) : (
                 <div className="">

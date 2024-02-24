@@ -2,8 +2,12 @@ import React, { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import GoogleIcon from "../../assets/icons/google.png";
 import FacebookIcon from "../../assets/icons/facebook.png";
-import { Link, useNavigate } from "react-router-dom";
-import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import {
+  RecaptchaVerifier,
+  connectAuthEmulator,
+  signInWithPhoneNumber,
+} from "firebase/auth";
 import { auth, db } from "../../firebase/FirebaseConfig";
 import { collection, doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
 
@@ -28,16 +32,12 @@ const LoginPage = () => {
     return () => verifier.clear();
   }, []);
 
-  const hanldeLogin = async () => {
+  const handleRequestOTP = async () => {
     try {
       const userRef = doc(db, "users", userPhoneNumber);
       const userSnapshot = await getDoc(userRef);
 
       if (userSnapshot.exists()) {
-        await updateDoc(userRef, {
-          lastLogin: new Date(),
-        });
-
         if (userPhoneNumber.length >= 10) {
           setExpandForm(true);
           const appVerifier = recaptchaVerifier;
@@ -48,14 +48,28 @@ const LoginPage = () => {
             appVerifier
           );
           window.confirmationResult = confirmationResult;
-
-          // Navigate user to home page
-          window.location.href = "/";
         } else {
-          console.log("Invalid phone number");
+          console.log("دەبێت ژمارەی مۆبایل 10 ژمارە بێت");
         }
       } else {
         alert("ئەم بەکارهێنەرە بوونی نییە");
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const hanldeLogin = async () => {
+    try {
+      if (otp.length === 6) {
+        let confirmationResult = window.confirmationResult;
+        confirmationResult.confirm(otp).then(async () => {
+          await updateDoc(doc(db, "users", userPhoneNumber), {
+            lastLogin: new Date(),
+          });
+        });
+        // Navigate user to home page
+        navigate("/");
       }
     } catch (error) {
       console.log(error.message);
@@ -97,10 +111,16 @@ const LoginPage = () => {
                 onChange={(e) => setOTP(e.target.value)}
                 className="w-[300px] border border-[#C5C5C5]/50 rounded-lg p-2 bg-[#24232a] focus:outline-none"
               />
+              <button
+                onClick={hanldeLogin}
+                className="w-[300px] p-2 bg-[#212121] rounded-lg active:scale-95"
+              >
+                چوونەژوورەوە
+              </button>
             </>
           ) : (
             <button
-              onClick={hanldeLogin}
+              onClick={handleRequestOTP}
               className="w-[300px] p-2 bg-[#212121] rounded-lg active:scale-95"
             >
               داواکردنی کۆد

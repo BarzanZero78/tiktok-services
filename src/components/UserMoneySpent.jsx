@@ -51,7 +51,7 @@ const UserMoneySpent = ({
             <div className="h-[90px]">
               {userOrders.map((userOrder, index) => (
                 <div key={index}>
-                  {userOrder.orderData.userData.userId === user.userId ? (
+                  {userOrder.orderData.user.userId === user.userId ? (
                     <div className="flex flex-row-reverse justify-between w-full items-center p-1 border-b border-b-gray-300/15">
                       <div className="flex flex-col justify-end items-end gap-0.5">
                         <div className="flex flex-row-reverse justify-center items-center gap-0.5">

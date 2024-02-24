@@ -121,7 +121,7 @@ const ProductsContextProvider = ({ children }) => {
   const orderService = async (
     serviceId,
     orderData,
-    userData,
+    user,
     productDetails,
     selectedService,
     isServiceActive
@@ -135,26 +135,27 @@ const ProductsContextProvider = ({ children }) => {
       });
 
       const updatedUserMoney =
-        userData.userMoney - orderData.selectedService.serviceData.servicePrice;
+        user.userMoney - orderData.selectedService.serviceData.servicePrice;
       const updatedUserMoneySpent =
-        userData.userMoneySpent +
+        user.userMoneySpent +
         +orderData.selectedService.serviceData.servicePrice;
 
-      await updateDoc(doc(db, "users", userData.userId), {
+      await updateDoc(doc(db, "users", user.userPhoneNumber || user.userId), {
         userMoney: updatedUserMoney,
         userMoneySpent: updatedUserMoneySpent,
-        userAllOrders: userData.userAllOrders + 1,
+        userAllOrders: user.userAllOrders + 1,
       });
 
       await updateDoc(
         doc(db, `products/${productDetails.id}/services/${selectedService.id}`),
         {
           serviceCountSold: selectedService.serviceCountSold + 1,
-          serviceCountSold: selectedService.serviceData.serviceCountSold + 1,
+          "serviceData.serviceCountSold":
+            selectedService.serviceData.serviceCountSold + 1,
         }
       );
 
-      await updateDoc(doc(db, `products/${productDetails.id}`), {
+      await updateDoc(doc(db, "products", productDetails.id), {
         productSold: productDetails.productSold + 1,
         productSoldMoney:
           productDetails.productSoldMoney +
