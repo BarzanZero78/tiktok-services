@@ -6,20 +6,10 @@ import { useTranslation } from "react-i18next";
 import { Helmet } from "react-helmet";
 
 const MyOrdersPage = () => {
-  const { user, getUserData } = useAuth();
-  const [userData, setUserData] = useState(null);
+  const { user } = useAuth();
   const { fetchAllOrders } = useProduct();
   const [userOrders, setUserOrders] = useState([]);
   const { t } = useTranslation();
-
-  useEffect(() => {
-    fetchUserData();
-  }, [getUserData]);
-
-  const fetchUserData = async () => {
-    const data = await getUserData();
-    setUserData(data);
-  };
 
   useEffect(() => {
     getUserOrders();
@@ -36,7 +26,7 @@ const MyOrdersPage = () => {
         <title>TikTok Services | داواکاریەکانم</title>
       </Helmet>
 
-      {userData ? (
+      {user ? (
         <div className="pt-[80px] flex flex-col justify-center items-center gap-10">
           <div>
             <h3 className="text-2xl">{t("My Orders")}</h3>
@@ -45,7 +35,7 @@ const MyOrdersPage = () => {
           <div className="container mx-auto max-w-[1200px] flex flex-wrap justify-center items-center gap-10">
             {userOrders.map((userOrder, index) => (
               <div key={index}>
-              {userOrder.orderData.userData.userId === userData.userId ? (
+              {userOrder.orderData.userData.userId === user.userId ? (
                 <div
                 className="flex flex-col justify-center items-center gap-4 border border-[#C5C5C5]/50 rounded-lg w-[275px] h-[350px] hover:shadow-xl hover:-translate-y-6 transition ease-in-out duration-300"
               >

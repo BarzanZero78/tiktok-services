@@ -8,7 +8,7 @@ import {
 import React from "react";
 import { db } from "../../firebase/FirebaseConfig";
 
-const OrderCard = ({ allOrder, userData }) => {
+const OrderCard = ({ allOrder, user }) => {
   const hanldeIsServiceActive = async () => {
     if (allOrder) {
       try {
@@ -19,8 +19,8 @@ const OrderCard = ({ allOrder, userData }) => {
         });
 
         // Update the user's active orders count
-        await updateDoc(doc(db, "users", userData.userId), {
-          userActiveOrders: userData.userActiveOrders + 1,
+        await updateDoc(doc(db, "users", user.userId), {
+          userActiveOrders: user.userActiveOrders + 1,
         });
 
         alert(
@@ -51,11 +51,11 @@ const OrderCard = ({ allOrder, userData }) => {
 
         <div className="flex justify-center items-center ml-0 mr-auto px-2 gap-1">
           <img
-            src={allOrder.orderData.userData.userImage}
+            src={allOrder.orderData.user.userImage}
             className="w-[30px] h-[30px] object-cover rounded-full"
             alt=""
           />
-          <p>{allOrder.orderData.userData.userName}</p>
+          <p>{allOrder.orderData.user.userName}</p>
         </div>
 
         <div className="ml-0 mr-auto px-2">

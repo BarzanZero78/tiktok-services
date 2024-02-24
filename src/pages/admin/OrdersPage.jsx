@@ -5,15 +5,11 @@ import { useProduct } from "../../context/ProductsContext";
 import OrderCard from "../../components/admin/OrderCard";
 
 const OrdersPage = () => {
-  const { getUserData } = useAuth();
+  const { user } = useAuth();
   const { fetchAllOrders } = useProduct();
   const [allOrders, setAllOrders] = useState([]);
-  const [userData, setUserData] = useState(null);
 
-  useEffect(() => {
-    fetchUserData();
-  }, [getUserData]);
-
+  
   useEffect(() => {
     getAllOrders();
   }, [fetchAllOrders]);
@@ -23,23 +19,19 @@ const OrdersPage = () => {
     setAllOrders(data);
   }
 
-  const fetchUserData = async () => {
-    const data = await getUserData();
-    setUserData(data);
-  };
-
+  
   return (
     <div className="text-white">
-      {userData ? (
+      {user ? (
         <>
-          {userData.isAdmin === true ? (
+          {user.isAdmin === true ? (
             <div className="flex">
               <div className="flex-1"><SideBar /></div>
 
               <div className="flex-1 flex justify-end items-end gap-9 flex-wrap p-7">
                 {allOrders.map((allOrder, index) => (
                     <div className="" key={index}>
-                        <OrderCard allOrder={allOrder} userData={userData} />
+                        <OrderCard allOrder={allOrder} user={user} />
                     </div>
                 ))}
 

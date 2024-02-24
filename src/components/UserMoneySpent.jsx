@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useProduct } from "../context/ProductsContext";
 
 const UserMoneySpent = ({
-  userData,
+  user,
   showUserMoneySpent,
   setShowUserMoneySpent,
   t,
@@ -20,17 +20,20 @@ const UserMoneySpent = ({
   };
 
   return (
-    <div className="fixed top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 w-full h-screen backdrop-blur-sm">
+    <div
+      className="fixed top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 w-full h-screen backdrop-blur-sm"
+      style={{ zIndex: 1 }}
+    >
       <div
         className={`absolute top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 bg-black/90 text-white ${
-          userData.userMoneySpent > 0
+          user.userMoneySpent > 0
             ? "w-[350px] h-[225px] overflow-y-auto"
             : "w-[300px] h-[150px]"
         } rounded-lg flex flex-col justify-center items-center gap-4`}
       >
         <div className="sticky top-0 left-0 bg-black flex justify-between items-center w-full p-2 border-b border-b-[#C5C5C5]/15">
           <div className="flex flex-row-reverse gap-0.5">
-            <p>{userData.userMoneySpent.toLocaleString()}</p>
+            <p>{user.userMoneySpent.toLocaleString()}</p>
             <p>دینار</p>
           </div>
 
@@ -44,13 +47,11 @@ const UserMoneySpent = ({
         </div>
 
         <div className="w-full">
-          {userData.userMoneySpent > 0 ? (
+          {user.userMoneySpent > 0 ? (
             <div className="h-[90px]">
               {userOrders.map((userOrder, index) => (
-                <div
-                  key={index}
-                >
-                  {userOrder.orderData.userData.userId === userData.userId ? (
+                <div key={index}>
+                  {userOrder.orderData.userData.userId === user.userId ? (
                     <div className="flex flex-row-reverse justify-between w-full items-center p-1 border-b border-b-gray-300/15">
                       <div className="flex flex-col justify-end items-end gap-0.5">
                         <div className="flex flex-row-reverse justify-center items-center gap-0.5">

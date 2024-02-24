@@ -5,8 +5,7 @@ import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../firebase/FirebaseConfig";
 
 const AddProduct = () => {
-  const { getUserData } = useAuth();
-  const [userData, setUserData] = useState(null);
+  const { user } = useAuth();
   const [productName, setProductName] = useState("");
   const [productSlug, setProductSlug] = useState("");
   const [productImage, setProductImage] = useState(null);
@@ -16,15 +15,7 @@ const AddProduct = () => {
   const [productProfitMoney, setProductProfitMoney] = useState(0);
   const { addProduct } = useProduct();
 
-  useEffect(() => {
-    fetchUserData();
-  }, [getUserData]);
-
-  const fetchUserData = async () => {
-    const data = await getUserData();
-    setUserData(data);
-  };
-
+  
   const hanldeProductImage = async () => {
     try {
       if (!productImage) return null;
@@ -78,9 +69,9 @@ const AddProduct = () => {
 
   return (
     <div className="text-white">
-      {userData ? (
+      {user ? (
         <div className="text-white">
-          {userData.isAdmin === true ? (
+          {user.isAdmin === true ? (
             <div className="absolute top-[50%] left-[50%] font-serif text-white transform -translate-x-1/2 -translate-y-1/2 w-[350px] h-[300px] flex flex-col justify-center items-center gap-4 border border-[#C5C5C5]/30 rounded-lg">
               <div>
                 <h3 className="text-lg font-bold">Add Product</h3>

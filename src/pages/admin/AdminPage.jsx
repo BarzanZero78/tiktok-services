@@ -4,24 +4,13 @@ import SideBar from '../../components/admin/SideBar';
 import AdminHeader from '../../components/admin/AdminHeader';
 
 const AdminPage = () => {
-  const { getUserData } = useAuth();
-  const [userData, setUserData] = useState(null);
-
-  useEffect(() => {
-    fetchUserData();
-  }, [getUserData]);
-
-  const fetchUserData = async () => {
-    const data = await getUserData();
-    setUserData(data);
-  }
-
+  const { user } = useAuth();
 
   return (
     <div className='text-white'>
-      {userData ? (
+      {user ? (
         <div>
-        {userData.isAdmin === true ? (
+        {user.isAdmin === true ? (
           <div className='flex gap-56'>
 
             <div className='flex-1'>
@@ -29,7 +18,7 @@ const AdminPage = () => {
             </div>
 
             <div className='flex-auto'>
-              <AdminHeader userData={userData} />
+              <AdminHeader user={user} />
             </div>
 
           </div>

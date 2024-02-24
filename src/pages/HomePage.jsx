@@ -6,21 +6,13 @@ import { useProduct } from "../context/ProductsContext";
 import { Helmet } from "react-helmet";
 
 const HomePage = () => {
-  const { getUserData } = useAuth();
+  const { user } = useAuth();
   const [userData, setUserData] = useState(null);
   const [showSignInDialog, setShowSignInDialog] = useState(false);
   const { products } = useProduct();
   const [selectedProduct, setSelectedProduct] = useState(null);
 
-  useEffect(() => {
-    fetchUserData();
-  }, [getUserData]);
-
-  const fetchUserData = async () => {
-    const data = await getUserData();
-    setUserData(data);
-  };
-
+  
   const hanldeProductClick = (product) => {
     setSelectedProduct(product);
     setShowSignInDialog(true);
@@ -46,7 +38,7 @@ const HomePage = () => {
         <div className="flex flex-row-reverse flex-wrap justify-center items-center gap-7">
           {products.map((product, index) => (
             <div className="" key={index}>
-              {userData ? (
+              {user ? (
                 <div className="">
                   <Link
                     to={`/service/${product.productSlug}`}
@@ -93,7 +85,7 @@ const HomePage = () => {
                         </div>
 
                         <Link
-                          to="/auth"
+                          to="/login"
                           className="text-[#4562c4] active:scale-95"
                         >
                           چوونەژوورەوە

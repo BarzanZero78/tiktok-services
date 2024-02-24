@@ -5,20 +5,14 @@ import { useProduct } from "../../context/ProductsContext";
 import { Link } from "react-router-dom";
 
 const ActiveOrdes = () => {
-  const { getUserData } = useAuth();
-  const [userData, setUserData] = useState(null);
+  const { user } = useAuth();
   const { fetchAllOrders } = useProduct();
   const [activeOrders, setActiveOrders] = useState([]);
 
-  useEffect(() => {
-    fetchUserData();
+  useEffect(() => {;
     fetchActiveOrders();
-  }, [getUserData, fetchAllOrders]);
+  }, [fetchAllOrders]);
 
-  const fetchUserData = async () => {
-    const data = await getUserData();
-    setUserData(data);
-  };
 
   const fetchActiveOrders = async () => {
     const data = await fetchAllOrders();
@@ -31,9 +25,9 @@ const ActiveOrdes = () => {
 
   return (
     <div className="text-white">
-      {userData ? (
+      {user ? (
         <>
-          {userData.isAdmin === true ? (
+          {user.isAdmin === true ? (
             <div className="flex">
               <div className="flex-1">
                 <SideBar />
@@ -82,12 +76,12 @@ const ActiveOrdes = () => {
 
                         <div className="flex flex-col justify-start items-center gap-2 ml-0 mr-auto px-2">
                           <Link
-                            to={`/home/admin/user/${allActiveOrder.orderData.userData.userName}`}
+                            to={`/home/admin/user/${allActiveOrder.orderData.user.userName}`}
                             className="flex flex-row-reverse justify-center items-center gap-0.5 active:scale-95 text-[#C5C5C5] hover:text-[#fff] transition-all"
                           >
-                            <p>{allActiveOrder.orderData.userData.userName}</p>
+                            <p>{allActiveOrder.orderData.user.userName}</p>
                             <img
-                              src={allActiveOrder.orderData.userData.userImage}
+                              src={allActiveOrder.orderData.user.userImage}
                               className="w-[25px] h-[25px] object-cover rounded-full"
                               alt=""
                             />

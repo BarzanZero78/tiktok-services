@@ -7,22 +7,13 @@ import { Helmet } from "react-helmet";
 
 const ServicePage = () => {
   const { productSlug } = useParams();
-  const { getUserData } = useAuth();
-  const [userData, setUserData] = useState(null);
+  const { user } = useAuth();
   const { products, fetchProductWithServices, services } = useProduct();
   const [productDetails, setProductDetails] = useState(null);
   const [selectedService, setSelectedService] = useState(null);
   const [showOrderForm, setShowOrderForm] = useState(false);
 
-  useEffect(() => {
-    fetchUserData();
-  }, [getUserData]);
-
-  const fetchUserData = async () => {
-    const data = await getUserData();
-    setUserData(data);
-  };
-
+ 
   useEffect(() => {
     if (products.length > 0) {
       const foundProduct = products.find(
@@ -49,7 +40,7 @@ const ServicePage = () => {
         <title>TikTok Services | خزمەتگوزاری {productDetails ? productDetails.productName : ''}</title>
       </Helmet>
 
-      {userData ? (
+      {user ? (
         <div className="text-white flex flex-col justify-center items-center gap-10">
           <header className="fixed top-0 left-0 w-full h-12 bg-[#212121] flex justify-between items-center px-2">
             <div>
@@ -105,7 +96,7 @@ const ServicePage = () => {
                 selectedService={selectedService}
                 showOrderForm={showOrderForm}
                 setShowOrderForm={setShowOrderForm}
-                userData={userData}
+                user={user}
                 productDetails={productDetails}
               />
             </div>

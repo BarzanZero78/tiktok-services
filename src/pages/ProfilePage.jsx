@@ -11,10 +11,9 @@ import { useTranslation } from "react-i18next";
 import { useTheme } from "../context/ThemeContext";
 
 const ProfilePage = () => {
-  const { getUserData, signOutUser } = useAuth();
+  const { user, signOutUser } = useAuth();
   const { fetchUserOrders } = useProduct();
   const navigate = useNavigate();
-  const [userData, setUserData] = useState(null);
   const [showSignOutDialog, setShowSignOuDialog] = useState(false);
   const [showChangeAccent, setShowChangeAccent] = useState(false);
   const [showUserMoneySpent, setShowUserMoneySpent] = useState(false);
@@ -24,19 +23,10 @@ const ProfilePage = () => {
   const { t } = useTranslation();
   const { currentAccent, changeAccent } = useTheme();
 
-  useEffect(() => {
-    fetchUserData();
-  }, [getUserData]);
-
-  const fetchUserData = async () => {
-    const data = await getUserData();
-    setUserData(data);
-  };
-
   const hanldleSignOut = async () => {
     try {
       await signOutUser();
-      navigate("/");
+      window.location.href = "/";
     } catch (error) {
       console.log(error.message);
     }
@@ -47,34 +37,40 @@ const ProfilePage = () => {
   }, [fetchUserOrders]);
 
   const getUserOrders = async () => {
-    if (userData) {
-      const data = await fetchUserOrders(userData.userId);
+    if (user) {
+      const data = await fetchUserOrders(user.userId);
       setUserOrders(data);
     }
   };
 
   return (
     <div className="">
-      {userData ? (
+      {user ? (
         <div className="pt-[80px]">
           <div className="w-[95%] h-[200px] bg-[#212121] text-white rounded-xl mx-auto flex flex-row-reverse justify-between items-center p-2">
             <div className="flex flex-col justify-between items-center h-full py-2">
               <div className="flex flex-row-reverse justify-center items-center gap-1">
                 <div>
-                  <img
-                    src={userData.userImage}
-                    className="w-[70px] h-[70px] rounded-full object-cover"
-                    alt=""
-                  />
+                  {user.userImage ? (
+                    <img
+                      src={user.userImage}
+                      className="w-[70px] h-[70px] rounded-full object-cover"
+                      alt=""
+                    />
+                  ) : (
+                    <p className="bg-[#969393]/15 rounded-full w-[70px] h-[70px] text-center grid place-items-center text-2xl">
+                      {user.userName.charAt(0)}
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex flex-col justify-start items-start">
-                  <dir>{userData.userName}</dir>
+                  <p>{user.userName}</p>
                   <div className="font-sans text-[#C5C5C5]/70 truncate">
-                    {userData.userPhoneNumber ? (
-                      <p>{userData.userPhoneNumber}</p>
+                    {user.userPhoneNumber ? (
+                      <p>{user.userPhoneNumber}</p>
                     ) : (
-                      <p>{userData.userEmail}</p>
+                      <p>{user.userEmail}</p>
                     )}
                   </div>
                 </div>
@@ -84,8 +80,8 @@ const ProfilePage = () => {
                 <p className="text-[#C5C5C5]/70">{t("Balance")}</p>
 
                 <div className="flex flex-row-reverse items-center text-[#00FF00] gap-1">
-                  <p>{userData.userMoney.toLocaleString()}</p>
-                  <p>{t('Thousand Dinar')}</p>
+                  <p>{user.userMoney.toLocaleString()}</p>
+                  <p>{t("Thousand Dinar")}</p>
                 </div>
               </div>
             </div>
@@ -122,7 +118,10 @@ const ProfilePage = () => {
           </div>
 
           {showChangeAccent && (
-            <div className="fixed top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 w-full h-screen backdrop-blur-sm">
+            <div
+              className="fixed top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 w-full h-screen backdrop-blur-sm"
+              style={{ zIndex: 1 }}
+            >
               <ChangeAccent
                 showChangeAccent={showChangeAccent}
                 setShowChangeAccent={setShowChangeAccent}
@@ -137,17 +136,17 @@ const ProfilePage = () => {
               onClick={() => setShowUserMoneySpent(!showUserMoneySpent)}
               className="w-[95%] active:scale-95 cursor-pointer h-[60px] bg-[#212121] text-white rounded-xl mx-auto flex flex-row-reverse justify-between items-center p-2 hover:shadow-2xl"
             >
-              <h3 className="text-base">{t('How Much Spent')}</h3>
+              <h3 className="text-base">{t("How Much Spent")}</h3>
 
               <div className="flex flex-row-reverse justify-center items-center gap-0.5 text-[#FF0000] text-base">
-                <p>{userData.userMoneySpent.toLocaleString()}</p>
+                <p>{user.userMoneySpent.toLocaleString()}</p>
                 <p>{t("Thousand Dinar")}</p>
               </div>
             </button>
 
             {showUserMoneySpent && (
               <UserMoneySpent
-                userData={userData}
+                user={user}
                 showUserMoneySpent={showUserMoneySpent}
                 setShowUserMoneySpent={setShowUserMoneySpent}
                 t={t}
@@ -161,13 +160,13 @@ const ProfilePage = () => {
               <h3 className="text-base">{t("My Orders")}</h3>
 
               <p className="text-[#404FD8] text-xl drop-shadow-2xl">
-                {userData.userAllOrders.toLocaleString()}
+                {user.userAllOrders.toLocaleString()}
               </p>
             </button>
 
             {showUserAllOrders && (
               <UserAllOrders
-                userData={userData}
+                user={user}
                 showUserAllOrders={showUserAllOrders}
                 setShowUserAllOrders={setShowUserAllOrders}
                 t={t}
@@ -179,18 +178,18 @@ const ProfilePage = () => {
               className="w-[95%] active:scale-95 cursor-pointer h-[60px] bg-[#212121] text-white rounded-xl mx-auto flex flex-row-reverse justify-between items-center p-2 hover:shadow-2xl"
             >
               <div className="flex flex-row-reverse gap-1 text-base">
-                <h3>{t('My Active Orders')}</h3>
+                <h3>{t("My Active Orders")}</h3>
                 <span className="material-icons text-[#00FF00]">task_alt</span>
               </div>
 
               <p className="text-[#00FF00] text-xl drop-shadow-2xl">
-                {userData.userActiveOrders.toLocaleString()}
+                {user.userActiveOrders.toLocaleString()}
               </p>
             </button>
 
             {showUserActiveOrders && (
               <UserActiveOrders
-                userData={userData}
+                user={user}
                 showUserActiveOrders={showUserActiveOrders}
                 setShowUserActiveOrders={setShowUserActiveOrders}
                 t={t}

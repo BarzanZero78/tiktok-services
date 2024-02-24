@@ -7,7 +7,7 @@ const OrderForm = ({
   selectedService,
   showOrderForm,
   setShowOrderForm,
-  userData,
+  user,
   productDetails,
 }) => {
   const [orderLink, setOrderLink] = useState("");
@@ -17,7 +17,7 @@ const OrderForm = ({
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if(userData.userMoney < selectedService.serviceData.servicePrice) {
+    if (user.userMoney < selectedService.serviceData.servicePrice) {
       alert("ناتواینت داواکاری بکەیت، چونکە پارەی پێویستت نییە");
       setSubmitOrder(false);
     } else {
@@ -27,33 +27,39 @@ const OrderForm = ({
 
   const hanldeOrder = async () => {
     try {
-       if(orderLink != '') {
+      if (orderLink != "") {
         const orderDay = new Date().getDate();
         const orderMonth = new Date().getMonth();
         const orderYear = new Date().getFullYear();
-        const orderData = {
-          userData,
+        const orderDate = {
+          user,
           selectedService,
           orderLink,
           productSlug: productDetails.productSlug,
           productName: productDetails.productName,
           productImage: productDetails.productImageURL,
           orderDate: orderDay + "/" + orderMonth + "/" + orderYear,
-        }
+        };
         const isServiceActive = false;
 
-        await orderService(selectedService.id, orderData, userData, productDetails, selectedService, isServiceActive);
+        await orderService(
+          selectedService.id,
+          orderDate,
+          user,
+          productDetails,
+          selectedService,
+          isServiceActive
+        );
 
         setOrderLink("");
         setSubmitOrder(false);
         setShowOrderForm(false);
         alert("داواکاریەکەت سەرکەوتووبوو");
       }
-
-    } catch(error) {
+    } catch (error) {
       console.log(error.message);
     }
-  }
+  };
 
   return (
     <div>
@@ -82,7 +88,7 @@ const OrderForm = ({
           </div>
 
           <div className="flex flex-row-reverse justify-center items-center gap-0.5">
-            <p className="">{userData.userMoney.toLocaleString()}</p>
+            <p className="">{user.userMoney.toLocaleString()}</p>
             <p>دینارت هەیە</p>
           </div>
 
@@ -123,22 +129,43 @@ const OrderForm = ({
           className="absolute top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 bg-black/80 w-[350px] h-[250px] rounded-lg p-1 flex flex-col justify-center items-center gap-3"
           onClick={(event) => event.stopPropagation()}
         >
-          <div className="flex flex-wrap p-2 flex-row-reverse justify-start items-center gap-0.5">
+          <div className="flex flex-wrap p-2 flex-row-reverse justify-start items-center gap-0.5 break-words w-full">
             <p>ئایا دڵنیای لە داواکردنی</p>
             <p>{selectedService.serviceData.serviceName}</p>
-            <img src={productDetails.productImageURL} className="w-5 h-5 object-cover" alt="" />
+            <img
+              src={productDetails.productImageURL}
+              className="w-5 h-5 object-cover"
+              alt=""
+            />
             <p>بە بڕی</p>
-            <p className="text-[#EE1D52]">{selectedService.serviceData.servicePrice.toLocaleString()}</p>
+            <p className="text-[#EE1D52]">
+              {selectedService.serviceData.servicePrice.toLocaleString()}
+            </p>
             <p className="text-[#EE1D52]">هەزار دینار</p>
             <p>بۆ</p>
-            <a href={orderLink} target="_blank" className="font-sans text-[#1E55C0] active:scale-95">{orderLink}</a>
-          </div>
-          
-          <div className="flex flex-row-reverse w-full py- justify-evenly items-center">
-            <button onClick={hanldeOrder} className="active:scale-95 bg-[#212121] w-[150px] p-2 rounded-lg">داواکردن</button>
-            <button onClick={() => setShowOrderForm(!showOrderForm)} className="text-[#EE2121] active:scale-95">هەڵوەشاندنەوە</button>
+            <a
+              href={orderLink}
+              target="_blank"
+              className="font-sans text-[#1E55C0] active:scale-95 break-words w-full"
+            >
+              {orderLink}
+            </a>
           </div>
 
+          <div className="flex flex-row-reverse w-full py- justify-evenly items-center">
+            <button
+              onClick={hanldeOrder}
+              className="active:scale-95 bg-[#212121] w-[150px] p-2 rounded-lg"
+            >
+              داواکردن
+            </button>
+            <button
+              onClick={() => setShowOrderForm(!showOrderForm)}
+              className="text-[#EE2121] active:scale-95"
+            >
+              هەڵوەشاندنەوە
+            </button>
+          </div>
         </div>
       )}
     </div>

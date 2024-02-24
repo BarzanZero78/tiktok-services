@@ -5,8 +5,7 @@ import { useAuth } from "../../context/AuthContext";
 
 const ProductPage = () => {
   const { productSlug } = useParams();
-  const { getUserData } = useAuth();
-  const [userData, setUserData] = useState(null);
+  const { user } = useAuth();
   const {
     products,
     fetchProductWithServices,
@@ -15,14 +14,6 @@ const ProductPage = () => {
   } = useProduct();
   const [productDetails, setProductDetails] = useState(null);
 
-  useEffect(() => {
-    fetchUserData();
-  }, [getUserData]);
-
-  const fetchUserData = async () => {
-    const data = await getUserData();
-    setUserData(data);
-  };
 
   useEffect(() => {
     if (products.length > 0) {
@@ -41,9 +32,9 @@ const ProductPage = () => {
 
   return (
     <div className="text-white">
-      {userData ? (
+      {user ? (
         <>
-          {userData.isAdmin === true ? (
+          {user.isAdmin === true ? (
             <>
               {productDetails ? (
                 <div className="font-serif flex flex-col justify-center items-center gap-5 text-white">

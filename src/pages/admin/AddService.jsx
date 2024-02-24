@@ -6,10 +6,9 @@ import { useProduct } from "../../context/ProductsContext";
 import { useParams } from "react-router-dom";
 
 const AddService = () => {
-  const { getUserData } = useAuth();
+  const { user } = useAuth();
   const { productSlug } = useParams();
   const [productDetails, setProductDetails] = useState(null);
-  const [userData, setUserData] = useState(null);
   const [serviceName, setServiceName] = useState("");
   const [serviceImage, setServiceImage] = useState(null);
   const [servicePrice, setServicePrice] = useState(0);
@@ -17,15 +16,7 @@ const AddService = () => {
   const [serviceCountSold, setServiceCountSold] = useState(0);
   const { products, addService } = useProduct();
 
-  useEffect(() => {
-    fetchUserData();
-  }, [getUserData]);
-
-  const fetchUserData = async () => {
-    const data = await getUserData();
-    setUserData(data);
-  };
-
+  
   useEffect(() => {
     if (products.length > 0) {
       const foundProduct = products.find(
@@ -92,9 +83,9 @@ const AddService = () => {
 
   return (
     <div>
-      {userData ? (
+      {user ? (
         <>
-          {userData.isAdmin === true ? (
+          {user.isAdmin === true ? (
             <div className="font-serif text-white absolute top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 w-[350px] h-[350px] border border-[#C5C5C5]/50 rounded-lg flex flex-col justify-center items-center gap-5">
               <div>
                 <h3 className="text-lg font-semibold">

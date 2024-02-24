@@ -5,7 +5,7 @@ import { useProduct } from "../../context/ProductsContext";
 import { useAuth } from "../../context/AuthContext";
 import { Chart } from "chart.js/auto";
 
-const AdminHeader = ({ userData }) => {
+const AdminHeader = ({ user }) => {
   const { products, fetchAllOrders } = useProduct();
   const [allOrders, setAllOrders] = useState([]);
   const { getUsers } = useAuth();
@@ -122,7 +122,7 @@ const AdminHeader = ({ userData }) => {
       <div className="flex justify-between items-center w-full">
         <div className="flex flex-col justify-start items-start gap-1">
           <h3 className="text-lg font-bold">
-            Welcome back, {userData.userName}
+            Welcome back, {user.userName}
           </h3>
           <p className="text-sm text-[#c5c5c5]/70">
             Here's what's happening with{" "}
@@ -149,11 +149,11 @@ const AdminHeader = ({ userData }) => {
 
           <div className="flex justify-center items-center gap-3">
             <img
-              src={userData.userImage}
+              src={user.userImage}
               className="w-[35px] h-[35px] rounded-full object-cover"
               alt=""
             />
-            <h3 className="text-base">{userData.userName}</h3>
+            <h3 className="text-base">{user.userName}</h3>
           </div>
         </div>
       </div>
@@ -162,7 +162,7 @@ const AdminHeader = ({ userData }) => {
         <Informations
           allOrders={allOrders}
           allUsers={allUsers}
-          userData={userData}
+          user={user}
         />
       </div>
 

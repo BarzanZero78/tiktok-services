@@ -1,6 +1,5 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import HomePage from "./pages/HomePage";
-import AuthPage from "./pages/auth/AuthPage";
 import ProtectedRoute from "./routes/ProtectedRoute";
 import UserAuthProvider from "./context/AuthContext";
 import Header from "./components/Header";
@@ -18,6 +17,8 @@ import TutorialPage from "./pages/TutorialPage";
 import PaymentPage from "./pages/PaymentPage";
 import { ThemeProvider } from "./context/ThemeContext";
 import ActiveOrdes from "./pages/admin/ActiveOrdes";
+import SignUpPage from "./pages/auth/SignUpPage";
+import LoginPage from "./pages/auth/LoginPage";
 
 function App() {
   return (
@@ -39,12 +40,13 @@ function App() {
               <Route excat path="/tutorial" element={<TutorialPage />} />
               <Route excat path="/payment" element={<PaymentPage />} />
 
+              <Route excat path="/signup" element={<SignUpPage />} />
               <Route
                 excat
-                path="/auth"
+                path="/login"
                 element={
                   <ProtectedRoute>
-                    <AuthPage />
+                    <LoginPage />
                   </ProtectedRoute>
                 }
               />
@@ -72,8 +74,11 @@ function App() {
                 path="/home/admin/user/:userName"
                 element={<UserPage />}
               />
-              <Route excat path="/home/admin/active_orders" element={<ActiveOrdes />} />
-
+              <Route
+                excat
+                path="/home/admin/active_orders"
+                element={<ActiveOrdes />}
+              />
             </Routes>
           </Router>
         </ThemeProvider>

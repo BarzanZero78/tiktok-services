@@ -9,21 +9,19 @@ import EditUserMoneyForm from "../../components/admin/EditUserMoneyForm";
 
 const UserPage = () => {
   const { userName } = useParams();
-  const { getUserData, getUsers } = useAuth();
+  const { user, getUsers } = useAuth();
   const { fetchUserOrders } = useProduct();
   const [userOrders, setUserOrders] = useState([]);
-  const [userData, setUserData] = useState(null);
   const [userDetails, setUserDetails] = useState(null);
   const [showEditUserMoney, setShowEditUserMoney] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
-      await fetchUserData();
       await fetchUsers();
     };
 
     fetchData();
-  }, [getUserData, getUsers]);
+  }, [getUsers]);
 
   useEffect(() => {
     if (userDetails && userDetails.length > 0) {
@@ -34,11 +32,7 @@ const UserPage = () => {
     }
   }, [userDetails, userName]);
 
-  const fetchUserData = async () => {
-    const data = await getUserData();
-    setUserData(data);
-  };
-
+  
   const fetchUsers = async () => {
     const data = await getUsers();
     setUserDetails(data);
@@ -86,9 +80,9 @@ const UserPage = () => {
 
   return (
     <div className="text-white">
-      {userData ? (
+      {user ? (
         <>
-          {userData.isAdmin === true ? (
+          {user.isAdmin === true ? (
             <div className="flex">
               <div className="flex-1">
                 <SideBar />

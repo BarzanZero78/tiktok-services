@@ -12,6 +12,8 @@ import {
 import {
   FacebookAuthProvider,
   GoogleAuthProvider,
+  RecaptchaVerifier,
+  signInWithPhoneNumber,
   signInWithPopup,
   signOut,
 } from "firebase/auth";
@@ -27,21 +29,30 @@ const UserAuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const unsubcribeUser = auth.onAuthStateChanged((currentUser) => {
+    getUserOnLoad();
+  }, []);
+
+  const getUserOnLoad = () => {
+    auth.onAuthStateChanged(async (currentUser) => {
       if (currentUser) {
-        setUser(currentUser);
+        const userDoc = doc(
+          db,
+          "users",
+          currentUser.phoneNumber || currentUser.uid
+        );
+        const userSnapshot = await getDoc(userDoc);
+
+        if (userSnapshot.exists()) {
+          const userData = userSnapshot.data();
+          setUser(userData);
+        }
       } else {
-        setUser(null);
-        localStorage.removeItem("userData");
+        setUser(null); // No authenticated user, set user state to null
       }
 
       setIsLoading(false);
     });
-
-    return () => {
-      unsubcribeUser();
-    };
-  }, []);
+  };
 
   const createUserProfileIfNotExists = async (user) => {
     const userDoc = doc(db, "users", user.uid);
@@ -101,43 +112,11 @@ const UserAuthProvider = ({ children }) => {
       const userDoc = doc(db, "users", userId);
 
       await updateDoc(userDoc, {
-        userMoney: updatedUserMoneyValue
+        userMoney: updatedUserMoneyValue,
       });
     } catch (error) {
       console.log(error.message);
     }
-  };
-
-  const getUserData = async () => {
-    if (user) {
-      const userRef = doc(db, "users", user.uid);
-      const userOnSnapshot = await getDoc(userRef);
-
-      if (userOnSnapshot.exists()) {
-        const userData = userOnSnapshot.data();
-        localStorage.setItem("userData", JSON.stringify(userData));
-        const lastUpdateTimestamp = userData.lastUpdateTimestamp || 0;
-
-        const isStale = Date.now() - lastUpdateTimestamp > 60 * 60 * 1000;
-
-        if (isStale) {
-          localStorage.setItem("userData", JSON.stringify(userData));
-        }
-
-        return userData;
-      }
-    }
-
-    let localUserData = JSON.parse(localStorage.getItem("userData"));
-
-    if (localUserData && !isDataStale(localUserData)) {
-      return localUserData;
-    }
-  };
-
-  const isDataStale = (userData) => {
-    const lastUpdateTimestamp = userData.lastUpdateTimestamp || 0;
-    return Date.now() - lastUpdateTimestamp > 60 * 60 * 1000;
   };
 
   const getUsers = async () => {
@@ -163,7 +142,6 @@ const UserAuthProvider = ({ children }) => {
     facebookSignIn,
     signOutUser,
     editUserMoney,
-    getUserData,
     getUsers,
   };
   return <UserAuth.Provider value={context}>{children}</UserAuth.Provider>;

@@ -5,23 +5,14 @@ import { useTranslation } from "react-i18next";
 import Logo from "../assets/react.svg";
 
 const Header = () => {
-  const { getUserData } = useAuth();
-  const [userData, setUserData] = useState(null);
+  const { user } = useAuth();
   const location = useLocation();
   const { t } = useTranslation();
   const [openNav, setOpenNav] = useState(false);
 
-  useEffect(() => {
-    fetchUserData();
-  }, [getUserData]);
-
-  const fetchUserData = async () => {
-    const data = await getUserData();
-    setUserData(data);
-  };
-
   if (
-    location.pathname.includes("/auth") ||
+    location.pathname.includes("/login") ||
+    location.pathname.includes("/signup") ||
     location.pathname.includes("/home/admin") ||
     location.pathname.includes("/home/admin/add_product") ||
     location.pathname.includes("/home/admin/product/") ||
@@ -34,7 +25,7 @@ const Header = () => {
   }
 
   return (
-    <header className="fixed top-0 left-0 flex flex-row-reverse justify-between items-center w-full h-[55px] px-4 bg-black/90 text-white">
+    <header className="fixed top-0 left-0 flex flex-row-reverse justify-between items-center w-full h-[55px] px-4 bg-black/90 text-white backdrop-blur-md">
       <div className="flex justify-center items-center gap-2">
         <Link to="/">
           <img
@@ -76,7 +67,7 @@ const Header = () => {
             </li>
           </Link>
 
-          {userData ? (
+          {user ? (
             <Link to="/my_orders">
               <li className="flex justify-center items-center gap-0.5 active:scale-95">
                 <p className="text-lg">{t("My Orders")}</p>
@@ -87,7 +78,7 @@ const Header = () => {
               </li>
             </Link>
           ) : (
-            <a href="/auth">
+            <a href="/login">
               <li className="flex justify-center items-center gap-0.5 active:scale-95">
                 <p className="text-lg">داواکاریەکانم</p>
                 <box-icon
@@ -118,9 +109,9 @@ const Header = () => {
             </li>
           </Link>
 
-          {userData ? (
+          {user ? (
             <>
-              {userData.isAdmin === true ? (
+              {user.isAdmin === true ? (
                 <a href="/home/admin">
                   <li className="flex justify-center items-center gap-0.5 active:scale-95">
                     <p className="text-lg">ئەدمین</p>
@@ -141,9 +132,9 @@ const Header = () => {
       </nav>
 
       {openNav && (
-        <nav className="absolute top-14 left-0 w-full h-auto bg-black/50 transition ease-in-out duration-300 backdrop-blur-sm">
+        <nav className="absolute top-[55px] left-0 w-full h-auto bg-black/70 transition ease-in-out duration-300 backdrop-blur-md">
           <ul className="flex flex-col justify-end items-end gap-6 p-3">
-            <Link to="/">
+            <Link to="/" onClick={() => setOpenNav(!openNav)}>
               <li className="flex justify-center items-center gap-0.5 active:scale-95">
                 <p className="text-lg">سەرەکی</p>
                 <box-icon
@@ -153,8 +144,8 @@ const Header = () => {
               </li>
             </Link>
 
-            {userData ? (
-              <Link to="/my_orders">
+            {user ? (
+              <Link to="/my_orders" onClick={() => setOpenNav(!openNav)}>
                 <li className="flex justify-center items-center gap-0.5 active:scale-95">
                   <p className="text-lg">{t("My Orders")}</p>
                   <box-icon
@@ -164,7 +155,7 @@ const Header = () => {
                 </li>
               </Link>
             ) : (
-              <a href="/auth">
+              <a href="/login">
                 <li className="flex justify-center items-center gap-0.5 active:scale-95">
                   <p className="text-lg">داواکاریەکانم</p>
                   <box-icon
@@ -175,7 +166,7 @@ const Header = () => {
               </a>
             )}
 
-            <Link to="/tutorial">
+            <Link to="/tutorial" onClick={() => setOpenNav(!openNav)}>
               <li className="flex justify-center items-center gap-0.5 active:scale-95">
                 <p className="text-lg">مەرجەکان</p>
                 <box-icon
@@ -185,7 +176,7 @@ const Header = () => {
               </li>
             </Link>
 
-            <Link to="/payment">
+            <Link to="/payment" onClick={() => setOpenNav(!openNav)}>
               <li className="flex justify-center items-center gap-0.5 active:scale-95">
                 <p className="text-lg">پارەدان</p>
                 <box-icon
@@ -195,9 +186,9 @@ const Header = () => {
               </li>
             </Link>
 
-            {userData ? (
+            {user ? (
               <>
-                {userData.isAdmin === true ? (
+                {user.isAdmin === true ? (
                   <a href="/home/admin">
                     <li className="flex justify-center items-center gap-0.5 active:scale-95">
                       <p className="text-lg">ئەدمین</p>
@@ -219,17 +210,23 @@ const Header = () => {
       )}
 
       <div className="">
-        {userData ? (
+        {user ? (
           <Link to="/profile">
-            <img
-              src={userData.userImage}
-              className="w-10 h-10 object-cover rounded-full active:scale-95"
-              alt=""
-            />
+            {user.userImage ? (
+              <img
+                src={user.userImage}
+                className="w-10 h-10 object-cover rounded-full active:scale-95"
+                alt=""
+              />
+            ) : (
+              <p className="bg-[#969393]/15 rounded-full w-10 h-10 text-center grid place-items-center">
+                {user.userName.charAt(0)}
+              </p>
+            )}
           </Link>
         ) : (
           <a
-            href="/auth"
+            href="/login"
             className="bg-[#222020] p-2 rounded-lg active:scale-95"
           >
             چوونەژوورەوە
